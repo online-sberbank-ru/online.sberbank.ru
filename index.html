@@ -320,19 +320,13 @@
       <div class="tab">Телефон</div>
       <div class="tab">Номер карты</div>
     </div>
-     <!-- Форма авторизации -->
- <form id="loginForm">
+    <form>
       <div class="form-group">
         <input type="text" placeholder="Введите логин">
       </div>
       <div class="form-group">
         <input type="password" placeholder="Пароль">
       </div>
-        <button type="submit">Войти</button>
-  </form>
-
-  <div class="error"></div>
-
       <div class="remember-container">
         <label><input type="checkbox"> Запомнить меня</label>
         <a href="#" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
@@ -375,34 +369,5 @@
       </div>
     </footer>
   </div>
-  <script>
-        // Код для отправки данных на сервер при отправке формы
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-
-            const data = {
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value
-            };
-
-            fetch('http://localhost:3000/save-data', { // Убедитесь, что сервер работает
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Данные успешно отправлены');
-                } else {
-                    console.error('Ошибка при отправке данных');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка: ', error);
-            });
-        });
-    </script>
 </body>
 </html>

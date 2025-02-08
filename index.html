@@ -305,37 +305,28 @@
       // Обработчики для кнопок "Вход по QR-коду" и "Вход по коду"
       document.querySelectorAll('.auth-option').forEach(option => {
         option.addEventListener('click', () => {
-          window.location.href = 'https://example.com/404'; // Страница 404
+          window.location.href = 'https://example.com/404'; // Страница не найдена
         });
       });
 
-      // Обработчик для кнопки входа с номером карты
-      document.getElementById("card-login-btn")?.addEventListener('click', function () {
-        errorMessage.textContent = ''; // Очистить ошибки
-        const cardNumber = document.getElementById("card-number").value.trim();
-
-        if (!/^\d{16}$/.test(cardNumber)) {
-          errorMessage.textContent = 'Неправильный номер карты. Повторите попытку.';
-          document.getElementById("card-number").value = "";
-          return;
-        }
-
-        alert("Номер карты введен корректно!");
-      });
     });
   </script>
 </head>
 <body>
+
   <div class="login-container">
     <div class="logo">
-      <img src="sber.png" alt="СберБанк">
+      <img src="https://via.placeholder.com/150x40.png?text=Sberbank" alt="Sberbank Logo">
     </div>
-    <h2>Вход в СберБанк Онлайн</h2>
+
+    <h2>Вход в Сбербанк Онлайн</h2>
+
     <div class="tabs">
       <div class="tab active">Логин</div>
       <div class="tab">Телефон</div>
-      <div class="tab">Номер карты</div>
+      <div class="tab">Карта</div>
     </div>
+
     <form>
       <div class="form-group">
         <input type="text" placeholder="Введите логин">
@@ -343,47 +334,46 @@
       <div class="form-group">
         <input type="password" placeholder="Пароль">
       </div>
+
       <div class="remember-container">
-        <label><input type="checkbox"> Запомнить меня</label>
-        <a href="https://example.com/404" style="color: #007f00; font-size: 14px;">Забыли логин или пароль?</a>
+        <label>
+          <input type="checkbox"> Запомнить меня
+        </label>
+        <a href="#">Забыли пароль?</a>
       </div>
+
       <button type="button">Войти</button>
-      <p class="no-card-text">Нет карты СберБанка?</p>
     </form>
+
+    <div class="no-card-text">Необходима карта для входа</div>
 
     <div class="auth-options">
       <div class="auth-option">
-        <img src="qr.png" alt="QR-код">
-        Вход по QR-коду
+        <img src="https://via.placeholder.com/32" alt="QR код"> Войти по QR-коду
       </div>
       <div class="auth-option">
-        <img src="code.png" alt="Код">
-        Вход по коду
+        <img src="https://via.placeholder.com/32" alt="Код"> Войти по коду
       </div>
-    </div>
-
-    <div class="image-placeholder">
-      <img src="panel.png" alt="User image placeholder">
-    </div>
-
-    <div class="report-buttons">
-      <div class="report-button" onclick="window.location.href='https://example.com/404'">Сообщить о мошеннике</div>
-      <div class="report-button" onclick="window.location.href='https://example.com/404'">Больше о безопасности</div>
     </div>
 
     <div class="security-info">
-      Новый способ входа — по коду. Подключить безопасный доступ к СберБанк Онлайн.
+      Информация о безопасности.
+    </div>
+
+    <div class="image-placeholder">
+      <img src="https://via.placeholder.com/400x200" alt="Security Image">
+    </div>
+
+    <div class="report-buttons">
+      <div class="report-button">Сообщить о проблеме</div>
     </div>
 
     <footer>
       <div class="footer-info">
-        <p>Россия, Москва, 117997, ул. Вавилова, д. 19</p>
-        <p>Генеральная лицензия на осуществление банковских операций от 11 августа 2015 года. Регистрационный номер — 1481</p>
-        <p>© 1997–2025 ПАО СберБанк</p>
-        <p>900 — Для бесплатных звонков с мобильных на территории РФ</p>
-        <p>+7 (495) 500-55-50 — Для звонков из любой точки мира</p>
+        <p>Сбербанк Онлайн. Все права защищены.</p>
       </div>
     </footer>
   </div>
+
 </body>
 </html>

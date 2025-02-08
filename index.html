@@ -386,50 +386,27 @@
     </footer>
   </div>
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const loginButton = document.querySelector('button');
-    const loginInput = document.querySelector('input[placeholder="Введите логин"]');
-    const passwordInput = document.querySelector('input[placeholder="Пароль"]');
-    const errorMessage = document.createElement('div');
-    errorMessage.classList.add('error');
-    document.querySelector('.login-container').appendChild(errorMessage);
+const data = {
+  name: 'John Doe',
+  email: 'johndoe@example.com'
+};
 
-    loginButton.addEventListener('click', function () {
-      // Очистка предыдущих ошибок
-      errorMessage.textContent = '';
-      const login = loginInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      if (!login || !password) {
-        errorMessage.textContent = 'Логин и пароль не могут быть пустыми!';
-        return;
-      }
-
-      // Отправка данных на сервер
-      const dataToSend = {
-        login: login,
-        password: password
-      };
-
-      fetch('http://localhost:3000/save-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-      })
-      .then(response => response.json())
-      .then(message => {
-        if (message.message === 'Данные успешно сохранены') {
-          alert('Данные сохранены на сервере');
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при отправке данных:', error);
-        errorMessage.textContent = 'Ошибка при отправке данных. Попробуйте позже.';
-      });
-    });
-  });
-</script>
+fetch('http://localhost:3000/save-data', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+.then(response => {
+  if (response.ok) {
+    console.log('Данные успешно отправлены');
+  } else {
+    console.error('Ошибка при отправке данных');
+  }
+})
+.catch(error => {
+  console.error('Ошибка: ', error);
+});
 </body>
 </html>
